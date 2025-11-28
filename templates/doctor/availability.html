@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Availability{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-calendar3"></i> Manage Availability</h2>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Set Availability for Next 7 Days</h5>
+    </div>
+    <div class="card-body">
+        <form method="POST" action="{{ url_for('doctor_availability') }}">
+            {% for date_info in dates %}
+                {% set date_str = date_info.date_str %}
+                {% set day_name = date_info.day_name %}
+                {% set avail = availability.get(date_str) %}
+                
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="available_{{ date_str }}" name="available_{{ date_str }}" 
+                                           {% if avail %}checked{% endif %} onchange="toggleTimes('{{ date_str }}')">
+                                    <label class="form-check-label" for="available_{{ date_str }}">
+                                        <strong>{{ day_name }}</strong>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="start_time_{{ date_str }}" class="form-label">Start Time</label>
+                                <input type="time" class="form-control time-input" id="start_time_{{ date_str }}" name="start_time_{{ date_str }}" 
+                                       value="{% if avail %}{{ avail.start_time }}{% else %}09:00{% endif %}" 
+                                       {% if not avail %}disabled{% endif %}>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="end_time_{{ date_str }}" class="form-label">End Time</label>
+                                <input type="time" class="form-control time-input" id="end_time_{{ date_str }}" name="end_time_{{ date_str }}" 
+                                       value="{% if avail %}{{ avail.end_time }}{% else %}17:00{% endif %}" 
+                                       {% if not avail %}disabled{% endif %}>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            
+            <button type="submit" class="btn btn-primary">Save Availability</button>
+            <a href="{{ url_for('doctor_dashboard') }}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function toggleTimes(dateStr) {
+        const checkbox = document.getElementById('available_' + dateStr);
+        const startTime = document.getElementById('start_time_' + dateStr);
+        const endTime = document.getElementById('end_time_' + dateStr);
+        
+        if (checkbox.checked) {
+            startTime.disabled = false;
+            endTime.disabled = false;
+        } else {
+            startTime.disabled = true;
+            endTime.disabled = true;
+        }
+    }
+</script>
+{% endblock %}

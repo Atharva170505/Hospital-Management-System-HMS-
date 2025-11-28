@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}Doctor Dashboard{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-heart-pulse"></i> Doctor Dashboard</h2>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card stat-card bg-info text-white">
+            <div class="card-body">
+                <h3>{{ today_appointments|length }}</h3>
+                <p class="mb-0">Today's Appointments</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card bg-warning text-white">
+            <div class="card-body">
+                <h3>{{ upcoming_appointments|length }}</h3>
+                <p class="mb-0">Upcoming (7 Days)</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card bg-success text-white">
+            <div class="card-body">
+                <h3>{{ patients|length }}</h3>
+                <p class="mb-0">Total Patients</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-calendar-day"></i> Today's Appointments</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Patient</th>
+                                <th>Reason</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for appointment in today_appointments %}
+                            <tr>
+                                <td>{{ appointment.appointment_time }}</td>
+                                <td>{{ appointment.patient.name }}</td>
+                                <td>{{ appointment.reason }}</td>
+                                <td>
+                                    {% if appointment.status == 'Booked' %}
+                                        <span class="badge bg-info">{{ appointment.status }}</span>
+                                    {% elif appointment.status == 'Completed' %}
+                                        <span class="badge bg-success">{{ appointment.status }}</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">{{ appointment.status }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if appointment.status == 'Booked' %}
+                                        <a href="{{ url_for('doctor_complete_appointment', appointment_id=appointment.id) }}" class="btn btn-sm btn-success">
+                                            <i class="bi bi-check-circle"></i> Complete
+                                        </a>
+                                    {% endif %}
+                                    <a href="{{ url_for('doctor_patient_history', patient_id=appointment.patient.id) }}" class="btn btn-sm btn-info">
+                                        <i class="bi bi-clock-history"></i> History
+                                    </a>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center">No appointments for today</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-calendar-week"></i> Upcoming Appointments (Next 7 Days)</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Patient</th>
+                                <th>Reason</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for appointment in upcoming_appointments %}
+                            <tr>
+                                <td>{{ appointment.appointment_date.strftime('%Y-%m-%d') }}</td>
+                                <td>{{ appointment.appointment_time }}</td>
+                                <td>{{ appointment.patient.name }}</td>
+                                <td>{{ appointment.reason }}</td>
+                                <td>
+                                    <a href="{{ url_for('doctor_patient_history', patient_id=appointment.patient.id) }}" class="btn btn-sm btn-info">
+                                        <i class="bi bi-clock-history"></i> History
+                                    </a>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center">No upcoming appointments</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

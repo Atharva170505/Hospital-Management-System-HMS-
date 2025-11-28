@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Book Appointment{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="bi bi-calendar-plus"></i> Book Appointment</h4>
+            </div>
+            <div class="card-body">
+                <h5>Doctor Details</h5>
+                <p><strong>Name:</strong> {{ doctor.name }}</p>
+                <p><strong>Department:</strong> {{ doctor.department.name }}</p>
+                <p><strong>Qualification:</strong> {{ doctor.qualification }}</p>
+                <p><strong>Experience:</strong> {{ doctor.experience_years }} years</p>
+                <p><strong>Consultation Fee:</strong> ₹{{ doctor.consultation_fee }}</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Select Date & Time</h5>
+            </div>
+            <div class="card-body">
+                {% if availability %}
+                <form method="POST" action="{{ url_for('patient_book_appointment', doctor_id=doctor.id) }}">
+                    <div class="mb-3">
+                        <label for="appointment_date" class="form-label">Available Dates *</label>
+                        <select class="form-control" id="appointment_date" name="appointment_date" required>
+                            <option value="">Select Date</option>
+                            {% for avail in availability %}
+                            <option value="{{ avail.date.strftime('%Y-%m-%d') }}">
+                                {{ avail.date.strftime('%A, %B %d, %Y') }} ({{ avail.start_time }} - {{ avail.end_time }})
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="appointment_time" class="form-label">Preferred Time *</label>
+                        <input type="time" class="form-control" id="appointment_time" name="appointment_time" required>
+                        <small class="text-muted">Please select time within doctor's availability hours</small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="reason" class="form-label">Reason for Visit</label>
+                        <textarea class="form-control" id="reason" name="reason" rows="3" placeholder="Describe your symptoms or reason for consultation"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success">Book Appointment</button>
+                    <a href="{{ url_for('patient_doctors') }}" class="btn btn-secondary">Cancel</a>
+                </form>
+                {% else %}
+                <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle"></i> This doctor has no availability set for the next 7 days. Please check back later or choose another doctor.
+                </div>
+                <a href="{{ url_for('patient_doctors') }}" class="btn btn-primary">Back to Doctors</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
