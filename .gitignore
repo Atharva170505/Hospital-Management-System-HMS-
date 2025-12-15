@@ -1,12 +1,19 @@
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
+
+# Python
 .Python
 .venv/
 venv/
 env/
 ENV/
+env.bak/
+venv.bak/
+
+# Distribution / packaging
 build/
 develop-eggs/
 dist/
@@ -19,36 +26,72 @@ parts/
 sdist/
 var/
 wheels/
+pip-wheel-metadata/
+share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+MANIFEST
 
+# Flask instance folder
 instance/
 .webassets-cache
 
+# Database files
 *.db
 *.sqlite
 *.sqlite3
 
+# Backup and temporary files
 *.bak
 *_old.py.bak
 *.zip
+*.tmp
 
+# IDE / Editor
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
+.project
+.pydevproject
+.settings/
 
+# OS
 .DS_Store
 Thumbs.db
 
+# Logs
 *.log
+logs/
 
+# Environment variables
 .env
 .env.local
 .env.*.local
+.flaskenv
 
+# Testing
 .pytest_cache/
 .coverage
 htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+.hypothesis/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# Flask stuff
+instance/
+.webassets-cache
+flask_session/
+
+# Migrations (uncomment if you want to ignore migrations)
+# migrations/

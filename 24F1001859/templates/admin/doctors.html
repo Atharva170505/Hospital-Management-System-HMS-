@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Doctors{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-person-badge"></i> Manage Doctors</h2>
+    <a href="{{ url_for('admin_add_doctor') }}" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Add Doctor
+    </a>
+</div>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <form method="GET" action="{{ url_for('admin_doctors') }}">
+            <div class="input-group">
+                <input type="text" class="form-control" name="search" placeholder="Search by name or specialization..." value="{{ search_query }}">
+                <button class="btn btn-primary" type="submit">
+                    <i class="bi bi-search"></i> Search
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Department</th>
+                        <th>Phone</th>
+                        <th>Experience</th>
+                        <th>Fee</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for doctor in doctors %}
+                    <tr>
+                        <td>{{ doctor.id }}</td>
+                        <td>{{ doctor.name }}</td>
+                        <td>{{ doctor.user.email }}</td>
+                        <td>{{ doctor.department.name }}</td>
+                        <td>{{ doctor.phone }}</td>
+                        <td>{{ doctor.experience_years }} years</td>
+                        <td>₹{{ doctor.consultation_fee }}</td>
+                        <td>
+                            <a href="{{ url_for('admin_edit_doctor', doctor_id=doctor.id) }}" class="btn btn-sm btn-warning btn-action">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <form method="POST" action="{{ url_for('admin_delete_doctor', doctor_id=doctor.id) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this doctor?');">
+                                <button type="submit" class="btn btn-sm btn-danger btn-action">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="8" class="text-center">No doctors found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-speedometer2"></i> Admin Dashboard</h2>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card stat-card bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="mb-0">{{ total_doctors }}</h3>
+                        <p class="mb-0">Total Doctors</p>
+                    </div>
+                    <i class="bi bi-person-badge display-4"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="mb-0">{{ total_patients }}</h3>
+                        <p class="mb-0">Total Patients</p>
+                    </div>
+                    <i class="bi bi-people display-4"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card bg-info text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="mb-0">{{ total_appointments }}</h3>
+                        <p class="mb-0">Total Appointments</p>
+                    </div>
+                    <i class="bi bi-calendar-check display-4"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card bg-warning text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="mb-0">{{ pending_appointments }}</h3>
+                        <p class="mb-0">Pending</p>
+                    </div>
+                    <i class="bi bi-clock-history display-4"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-list-check"></i> Recent Appointments</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Patient</th>
+                                <th>Doctor</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for appointment in recent_appointments %}
+                            <tr>
+                                <td>{{ appointment.id }}</td>
+                                <td>{{ appointment.patient.name }}</td>
+                                <td>{{ appointment.doctor.name }}</td>
+                                <td>{{ appointment.appointment_date.strftime('%Y-%m-%d') }}</td>
+                                <td>{{ appointment.appointment_time }}</td>
+                                <td>
+                                    {% if appointment.status == 'Booked' %}
+                                        <span class="badge bg-info">{{ appointment.status }}</span>
+                                    {% elif appointment.status == 'Completed' %}
+                                        <span class="badge bg-success">{{ appointment.status }}</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">{{ appointment.status }}</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center">No appointments found</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
